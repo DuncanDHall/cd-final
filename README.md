@@ -1,2 +1,2 @@
-# cd-final
+# dc-final
 Distributed Computing final project
