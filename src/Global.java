@@ -29,9 +29,16 @@ public class Global {
     }
 
     public RawEvent[] generateDataTransferEvents() {
-        // TODO: generate a deterministic thin table of 'send data' events
+        // generate a deterministic thin table of 'send data' events
+        RawEvent[] events = new RawEvent[2];
+        events[0] = new RawEvent(1, 0, 4, "<node 0 calling node 4>");
+        events[1] = new RawEvent(11, 1, 3, "<node 1 calling node 3>");
+
+        // TODO: test for events closer together, and concurrent events
+
+        return events;
+
         // TODO-stretch: generate a random thin table of 'send data' events instead
-        return null;
     }
 
     public static void main(String[] args) {
