@@ -28,8 +28,7 @@ public class Global {
         }
     }
 
-    public Object generateDataTransferEvents() {
-        // TODO: figure out the correct data type here
+    public RawEvent[] generateDataTransferEvents() {
         // TODO: generate a deterministic thin table of 'send data' events
         // TODO-stretch: generate a random thin table of 'send data' events instead
         return null;
@@ -37,10 +36,9 @@ public class Global {
 
     public static void main(String[] args) {
         Global g = new Global(5, false);
-        Object dataTransferEvents = g.generateDataTransferEvents();
+        RawEvent[] dataTransferEvents = g.generateDataTransferEvents();
 
-        // TODO: figure out the correct data type here
-        // table = AODVHelper.expandEvents(dataTransferEvents);
+        AODVEvent[] fullEvents = AODVHelper.expandEvents(dataTransferEvents);
 
         // TODO: save fullEvents to csv
 
