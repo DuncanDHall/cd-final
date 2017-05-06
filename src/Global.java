@@ -15,7 +15,7 @@ public class Global {
      *      vertices are Nodes representing different machines in the network
      *      edges are integers representing distances between machines
      */
-    Graph<Node, Integer> network;
+    Graph<Node, Link> network;
 
 
     public Global(int numNodes, boolean dynamic) {
@@ -28,7 +28,7 @@ public class Global {
         }
     }
 
-    public Global(Graph<Node, Integer> network) {
+    public Global(Graph<Node, Link> network) {
         this.network = network;
     }
 

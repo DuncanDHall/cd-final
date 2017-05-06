@@ -14,7 +14,7 @@ public class EventExpansionTests {
 
     @Before
     public void setup() {
-        Graph<Node, Integer> network = new SparseGraph<>();
+        Graph<Node, Link> network = new SparseGraph<>();
 
         // create a linear network of 5 nodes
         Node previous = null;
@@ -22,7 +22,7 @@ public class EventExpansionTests {
             Node n = new Node(i);
             network.addVertex(n);
             if (previous != null) {
-                network.addEdge(1, previous, n);
+                network.addEdge(new Link(1, i - 1), previous, n);
             }
             previous = n;
         }
@@ -33,7 +33,7 @@ public class EventExpansionTests {
     @Test
     public void testExpand1() {
         RawEvent[] rawEvents = new RawEvent[1];
-        rawEvents[1] = new RawEvent(1, 0, 1, "<node 0 to node 4>");
+        rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 4>");
 
         AODVEvent[] expectedEvents = new AODVEvent[3];
         expectedEvents[0] = new AODVEvent(); // RREQ 0 -> 1
