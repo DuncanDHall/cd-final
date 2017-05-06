@@ -11,15 +11,19 @@ import static org.junit.Assert.assertArrayEquals;
 public class EventExpansionTests {
 
     private Global g;
+    private Node[] nodes;
 
     @Before
     public void setup() {
+        nodes = new Node[5];
+
         Graph<Node, Link> network = new SparseGraph<>();
 
         // create a linear network of 5 nodes
         Node previous = null;
         for (int i = 0; i < 5; i++) {
             Node n = new Node(i);
+            nodes[i] = n;
             network.addVertex(n);
             if (previous != null) {
                 network.addEdge(new Link(1, i - 1), previous, n);
@@ -36,9 +40,10 @@ public class EventExpansionTests {
         rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 4>");
 
         AODVEvent[] expectedEvents = new AODVEvent[3];
-        expectedEvents[0] = new AODVEvent(); // RREQ 0 -> 1
-        expectedEvents[1] = new AODVEvent(); // RREP 1 -> 0
-        expectedEvents[2] = new AODVEvent(); // data 0 -> 1
+        // TODO: implement these events
+        expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[1], ""); // RREQ 0 -> 1
+        expectedEvents[1] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], ""); // RREP 1 -> 0
+        expectedEvents[2] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<nodes 0 to node 4>"); // data 0 -> 1
 
         assertArrayEquals(
                 AODVHelper.expandEvents(rawEvents),
