@@ -6,4 +6,11 @@ public class Node {
     // TODO: layout class architecture
     // routing table
     // TODO: *then* implement
+
+    int id;
+
+    public Node(int id) {
+        this.id = id;
+    }
+
 }

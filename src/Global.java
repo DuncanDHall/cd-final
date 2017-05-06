@@ -28,6 +28,10 @@ public class Global {
         }
     }
 
+    public Global(Graph<Node, Integer> network) {
+        this.network = network;
+    }
+
     public RawEvent[] generateDataTransferEvents() {
         // generate a deterministic thin table of 'send data' events
         RawEvent[] events = new RawEvent[2];
