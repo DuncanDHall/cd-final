@@ -32,12 +32,10 @@ public class AODVHelper {
                         int hopCount = next.getHopCount(source) + 1;
                         if (time < hopCount + e.getTime()) {
                             time = hopCount + e.getTime();
-                            System.out.println(time);
                         }
                         n.addTableEntry(source, next, hopCount);
                         if (n.equals(destination)) {
                             timeDestinationReached = time;
-                            System.out.println(timeDestinationReached);
                         }
                         table.offer(new AODVEvent(hopCount, 1, next, n, source, destination, ""));
                         nextNodes.offer(n);
@@ -60,7 +58,7 @@ public class AODVHelper {
                 current = next;
             }
 
-            for (Node n: network.getVertices()) n.printTable();
+//            for (Node n: network.getVertices()) n.printTable();
 
             // Step 3: data sent source -> destination
             current = source;

@@ -13,17 +13,21 @@ import static org.junit.Assert.assertArrayEquals;
 public class EventExpansionTests {
 
     private Global g;
+    private Graph<Node, Link> network;
     private Node[] nodes;
 
     @Before
     public void setup() {
-        nodes = new Node[5];
+    }
 
-        Graph<Node, Link> network = new SparseGraph<>();
+    private void makeLinearNetwork(int numNodes) {
+        network = new SparseGraph<>();
+
+        nodes = new Node[numNodes];
 
         // create a linear network of 5 nodes
         Node previous = null;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numNodes; i++) {
             Node n = new Node(i);
             nodes[i] = n;
             network.addVertex(n);
@@ -38,11 +42,12 @@ public class EventExpansionTests {
 
     @Test
     public void testExpand1() {
+        makeLinearNetwork(2);
+
         RawEvent[] rawEvents = new RawEvent[1];
         rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 1>");
 
         AODVEvent[] expectedEvents = new AODVEvent[3];
-        // TODO: implement these events
         expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[1], ""); // RREQ 0 -> 1
         expectedEvents[1] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], ""); // RREP 1 -> 0
         expectedEvents[2] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1>"); // data 0 -> 1
@@ -51,18 +56,36 @@ public class EventExpansionTests {
         System.out.println(Arrays.toString(res));
 
         assertArrayEquals(
-                res,
-                expectedEvents
+                expectedEvents,
+                res
         );
     }
 
-//    @Test
+    @Test
     public void testExpand2() {
-        // TODO: finish this test
-        RawEvent[] rawEvents = new RawEvent[1];
-        rawEvents[1] = new RawEvent(1, 0, 4, "<node 0 to node 4>");
+        makeLinearNetwork(3);
 
-        AODVEvent[] aodvEvents = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
+        RawEvent[] rawEvents = new RawEvent[1];
+        rawEvents[0] = new RawEvent(1, 0, 2, "<node 0 to node 2>");
+
+        AODVEvent[] expectedEvents = new AODVEvent[6];
+        expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[2], ""); // RREQ 0 -> 1
+        expectedEvents[1] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[2], "");
+        expectedEvents[2] = new AODVEvent(3, 2, nodes[2], nodes[1], nodes[2], nodes[0], ""); // RREP 1 -> 0
+        expectedEvents[3] = new AODVEvent(4, 2, nodes[1], nodes[0], nodes[2], nodes[0], ""); // RREP 1 -> 0
+        expectedEvents[4] = new AODVEvent(5, 0, nodes[0], nodes[1], nodes[0], nodes[2], "<node 0 to node 2>"); // data 0 -> 1
+        expectedEvents[5] = new AODVEvent(6, 0, nodes[1], nodes[2], nodes[0], nodes[2], "<node 0 to node 2>"); // data 0 -> 1
+
+        AODVEvent[] res = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
+        for (AODVEvent e : res) {
+            System.out.println(e);
+        }
+
+        assertArrayEquals(
+                expectedEvents,
+                res
+        );
     }
+
 
 }
