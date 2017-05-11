@@ -51,7 +51,6 @@ public class AODVEvent implements Comparable {
                 return 0;
             }
         }
-        
     }
 
     public int getTime() {
