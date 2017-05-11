@@ -8,9 +8,13 @@ import java.util.PriorityQueue;
  * Assists in expanding a data transfer timetable (RawEvent[]) into a set of AODVEvents
  */
 public class AODVHelper {
-    public static AODVEvent[] expandEvents(RawEvent[] eventsTablePath) {
+    public static AODVEvent[] expandEvents(RawEvent[] eventsTable, Graph<Node, Link> network) {
         // TODO: implement this
         PriorityQueue<AODVEvent> table = new PriorityQueue<>();
+        for(RawEvent e : eventsTable) {
+        	
+        	//table.offer(e);
+        }
         throw new NotImplementedException();
     }
 }
