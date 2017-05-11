@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 /**
  * Created by duncan on 5/5/17.
  */
@@ -11,8 +13,11 @@ public class Node {
     private class TableEntry {
     	
     	Node nextHop;
-    	public TableEntry(Node nextHop) {
+    	int hopCount;
+
+    	public TableEntry(Node nextHop, int hopCount) {
     		this.nextHop = nextHop;
+    		this.hopCount = hopCount;
     	}
     }
 
@@ -24,13 +29,17 @@ public class Node {
         this.routingTable = new HashMap<>();
     }
 
-    public void addTableEntry(Node destination, Node nextHop) {
-    	this.routingTable.put(destination, new TableEntry(nextHop));
+    public void addTableEntry(Node destination, Node nextHop, int hopCount) {
+    	this.routingTable.put(destination, new TableEntry(nextHop, hopCount));
     }
 
     //look up in routing table
     public Node getNextHop(Node destination) {
     	return routingTable.get(destination).nextHop;
+    }
+
+    public int getHopCount(Node destination) {
+        return routingTable.get(destination).hopCount;
     }
 
 }

@@ -2,6 +2,8 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.HashMap;
+
 /**
  * Created by duncan on 5/5/17.
  *
@@ -16,6 +18,7 @@ public class Global {
      *      edges are integers representing distances between machines
      */
     Graph<Node, Link> network;
+    HashMap<Integer, Node> nodeLookup;
 
 
     public Global(int numNodes, boolean dynamic) {
@@ -30,6 +33,10 @@ public class Global {
 
     public Global(Graph<Node, Link> network) {
         this.network = network;
+        nodeLookup = new HashMap<>();
+        for (Node n : network.getVertices()) {
+            nodeLookup.put(n.id, n);
+        }
     }
 
     public RawEvent[] generateDataTransferEvents() {
@@ -49,7 +56,7 @@ public class Global {
         Global g = new Global(5, false);
         RawEvent[] dataTransferEvents = g.generateDataTransferEvents();
 
-        AODVEvent[] fullEvents = AODVHelper.expandEvents(dataTransferEvents);
+        AODVEvent[] fullEvents = AODVHelper.expandEvents(dataTransferEvents, g.network, g.nodeLookup);
 
         // TODO: save fullEvents to csv
 
