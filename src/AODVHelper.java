@@ -56,6 +56,14 @@ public class AODVHelper {
             }
 
             // Step 3: data sent source -> destination
+            Node current = source;
+            Node next;
+            while(true) {
+            	time += 1;
+            	next = current.getNextHop(destination);
+            	table.offer(new AODVEvent(time, 0, next, current, source, destination, e.getMsg()));
+            	current = next;
+            }
         }
         throw new NotImplementedException();
     }
