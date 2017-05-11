@@ -12,13 +12,20 @@ public class Node {
 	//for routing table
     private class TableEntry {
     	
-    	Node nextHop;
+    	Node destination;
+        Node nextHop;
     	int hopCount;
 
-    	public TableEntry(Node nextHop, int hopCount) {
+    	public TableEntry(Node destination, Node nextHop, int hopCount) {
+    	    this.destination = destination;
     		this.nextHop = nextHop;
     		this.hopCount = hopCount;
     	}
+
+        @Override
+        public String toString() {
+            return String.format("TableEntry: %s, %s, %d", destination, nextHop, hopCount);
+        }
     }
 
 	HashMap<Node, TableEntry> routingTable;
@@ -27,12 +34,13 @@ public class Node {
     public Node(int id) {
         this.id = id;
         this.routingTable = new HashMap<>();
+
+        addTableEntry(this, this, 0);
     }
 
-    public boolean addTableEntry(Node destination, Node nextHop, int hopCount) {
+    public void addTableEntry(Node destination, Node nextHop, int hopCount) {
         // boolean returns true if destination has been reached
-    	this.routingTable.put(destination, new TableEntry(nextHop, hopCount));
-    	return this.equals(destination);
+    	this.routingTable.put(destination, new TableEntry(destination, nextHop, hopCount));
     }
 
     //look up in routing table
@@ -44,4 +52,24 @@ public class Node {
         return routingTable.get(destination).hopCount;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return node.id == id;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Node %d", id);
+    }
+
+
+    // TODO: temp
+    public void printTable() {
+        System.out.println(routingTable);
+    }
 }

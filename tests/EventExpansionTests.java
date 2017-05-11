@@ -3,6 +3,8 @@ import edu.uci.ics.jung.graph.SparseGraph;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertArrayEquals;
 
 /**
@@ -21,7 +23,7 @@ public class EventExpansionTests {
 
         // create a linear network of 5 nodes
         Node previous = null;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             Node n = new Node(i);
             nodes[i] = n;
             network.addVertex(n);
@@ -37,16 +39,19 @@ public class EventExpansionTests {
     @Test
     public void testExpand1() {
         RawEvent[] rawEvents = new RawEvent[1];
-        rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 4>");
+        rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 1>");
 
         AODVEvent[] expectedEvents = new AODVEvent[3];
         // TODO: implement these events
         expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[1], ""); // RREQ 0 -> 1
         expectedEvents[1] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], ""); // RREP 1 -> 0
-        expectedEvents[2] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<nodes 0 to node 4>"); // data 0 -> 1
+        expectedEvents[2] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1>"); // data 0 -> 1
+
+        AODVEvent[] res = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
+        System.out.println(Arrays.toString(res));
 
         assertArrayEquals(
-                AODVHelper.expandEvents(rawEvents),
+                res,
                 expectedEvents
         );
     }
@@ -57,7 +62,7 @@ public class EventExpansionTests {
         RawEvent[] rawEvents = new RawEvent[1];
         rawEvents[1] = new RawEvent(1, 0, 4, "<node 0 to node 4>");
 
-        AODVEvent[] aodvEvents = AODVHelper.expandEvents(rawEvents);
+        AODVEvent[] aodvEvents = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
     }
 
 }

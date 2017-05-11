@@ -35,6 +35,28 @@ public class AODVEvent implements Comparable {
     public boolean isRREP() { return msgType == 2; }
 
     @Override
+    public String toString() {
+        return String.format("<AODVEvent %d, %d, %s, %s, %s>", time, msgType, from, to, message);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AODVEvent aodvEvent = (AODVEvent) o;
+
+        if (time != aodvEvent.time) return false;
+        if (msgType != aodvEvent.msgType) return false;
+        if (from != null ? !from.equals(aodvEvent.from) : aodvEvent.from != null) return false;
+        if (to != null ? !to.equals(aodvEvent.to) : aodvEvent.to != null) return false;
+        if (source != null ? !source.equals(aodvEvent.source) : aodvEvent.source != null) return false;
+        if (destination != null ? !destination.equals(aodvEvent.destination) : aodvEvent.destination != null)
+            return false;
+        return message != null ? message.equals(aodvEvent.message) : aodvEvent.message == null;
+    }
+
+    @Override
     public int compareTo(Object o) {
         // TODO: needs to be implemented for priority queue to work
         AODVEvent event = (AODVEvent) o;

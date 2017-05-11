@@ -1,5 +1,4 @@
 import edu.uci.ics.jung.graph.Graph;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -33,9 +32,12 @@ public class AODVHelper {
                         int hopCount = next.getHopCount(source) + 1;
                         if (time < hopCount + e.getTime()) {
                             time = hopCount + e.getTime();
+                            System.out.println(time);
                         }
-                        if (n.addTableEntry(source, next, hopCount)) {
+                        n.addTableEntry(source, next, hopCount);
+                        if (n.equals(destination)) {
                             timeDestinationReached = time;
+                            System.out.println(timeDestinationReached);
                         }
                         table.offer(new AODVEvent(hopCount, 1, next, n, source, destination, ""));
                         nextNodes.offer(n);
@@ -45,25 +47,36 @@ public class AODVHelper {
             }
 
             // Step 2: RREP sent destination -> source
-            time = timeDestinationReached;
+            time = timeDestinationReached - 1;
             Node current = destination;
             Node next;
-            while (current != source) {
-                time += 1;
+            int hopCount = 0;
+            while (!current.equals(source)) {
+                time++;
+                hopCount++;
                 next = current.getNextHop(source);
-                table.offer(new AODVEvent(time, 2, next, current, destination, source, ""));
+                next.addTableEntry(destination, current, hopCount);
+                table.offer(new AODVEvent(time, 2, current, next, destination, source, ""));
                 current = next;
             }
 
+            for (Node n: network.getVertices()) n.printTable();
+
             // Step 3: data sent source -> destination
             current = source;
-            while(current != destination) {
+            while(!current.equals(destination)) {
             	time += 1;
             	next = current.getNextHop(destination);
-            	table.offer(new AODVEvent(time, 0, next, current, source, destination, e.getMsg()));
+            	table.offer(new AODVEvent(time, 0, current, next, source, destination, e.getMsg()));
             	current = next;
             }
         }
-        throw new NotImplementedException();
+
+        AODVEvent[] res = new AODVEvent[table.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = table.poll();
+        }
+
+        return res;
     }
 }
