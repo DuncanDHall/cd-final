@@ -48,7 +48,7 @@ public class AODVHelper {
             time = timeDestinationReached;
             Node current = destination;
             Node next;
-            while (true) {
+            while (current != source) {
                 time += 1;
                 next = current.getNextHop(source);
                 table.offer(new AODVEvent(time, 2, next, current, destination, source, ""));
@@ -56,9 +56,8 @@ public class AODVHelper {
             }
 
             // Step 3: data sent source -> destination
-            Node current = source;
-            Node next;
-            while(true) {
+            current = source;
+            while(current != destination) {
             	time += 1;
             	next = current.getNextHop(destination);
             	table.offer(new AODVEvent(time, 0, next, current, source, destination, e.getMsg()));
