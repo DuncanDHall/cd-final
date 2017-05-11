@@ -37,7 +37,21 @@ public class AODVEvent implements Comparable {
     @Override
     public int compareTo(Object o) {
         // TODO: needs to be implemented for priority queue to work
-        return 0;
+        AODVEvent event = (AODVEvent) o;
+        if(this.time < event.time {
+            return -1;
+        } else if(this.time > event.time) {
+            return 1;
+        } else {
+            if(this.msgType < event.msgType) {
+                return -1;
+            } else if(this.msgType > event.msgType) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        
     }
 
     public int getTime() {
