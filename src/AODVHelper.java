@@ -16,36 +16,35 @@ public class AODVHelper {
             Node source = nodeLookup.get(e.getNodeFrom());
             Node destination = nodeLookup.get(e.getNodeTo());
 
-            Queue<Node> nextNodes = new LinkedList<>();
-            nextNodes.offer(source);
+            // Step 1: RREQ flood network
+            // note that this propagates RREQ through the destination
+            ArrayList<Node> nextNodes = new ArrayList<>();
+            ArrayList<Node> currentNodes = new ArrayList<>();
+            currentNodes.add(source);
 
             HashSet<Node> visited = new HashSet<>();
-            int time = 0;
+
             int timeDestinationReached = 0;
 
-            // Step 1: RREQ flood network
-            while (!nextNodes.isEmpty()) {
-                Node next = nextNodes.poll();
-                Collection<Node> ns = network.getNeighbors(next);
-                for (Node n : ns) {
-                    if (!visited.contains(n)) {
-                        int hopCount = next.getHopCount(source) + 1;
-                        if (time < hopCount + e.getTime()) {
-                            time = hopCount + e.getTime();
+            for (int hopCount = 1; !currentNodes.isEmpty(); hopCount++) {
+                for (Node node : currentNodes) {
+                    visited.add(node);
+                    for (Node neighbor : network.getNeighbors(node)) {
+                        if (!visited.contains(neighbor)){
+                            if (neighbor.equals(destination)) timeDestinationReached = hopCount + e.getTime();
+                            neighbor.addTableEntry(source, node, hopCount);
+                            table.add(new AODVEvent(hopCount + e.getTime() - 1, 1, node, neighbor, source, destination, ""));
+                            nextNodes.add(neighbor);
                         }
-                        n.addTableEntry(source, next, hopCount);
-                        if (n.equals(destination)) {
-                            timeDestinationReached = time;
-                        }
-                        table.offer(new AODVEvent(hopCount, 1, next, n, source, destination, ""));
-                        nextNodes.offer(n);
                     }
                 }
-                visited.add(next);
+                currentNodes = nextNodes;
+                nextNodes = new ArrayList<>();
             }
 
+
             // Step 2: RREP sent destination -> source
-            time = timeDestinationReached - 1;
+            int time = timeDestinationReached - 1;
             Node current = destination;
             Node next;
             int hopCount = 0;

@@ -87,5 +87,56 @@ public class EventExpansionTests {
         );
     }
 
+    @Test
+    public void testExpand3() {
+        // NOTE this demonstrates that RREQ propagation continues through destination node
 
+        makeLinearNetwork(3);
+
+        RawEvent[] rawEvents = new RawEvent[1];
+        rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 1>");
+
+        AODVEvent[] expectedEvents = new AODVEvent[4];
+        expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[1], "");
+        expectedEvents[1] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[1], "");
+        expectedEvents[2] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], "");
+        expectedEvents[3] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1>");
+
+        AODVEvent[] res = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
+        for (AODVEvent e : res) {
+            System.out.println(e);
+        }
+
+        assertArrayEquals(
+                expectedEvents,
+                res
+        );
+    }
+
+    @Test
+    public void testExpand4() {
+        makeLinearNetwork(2);
+
+        RawEvent[] rawEvents = new RawEvent[2];
+        rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 1 a>");
+        rawEvents[1] = new RawEvent(2, 0, 1, "<node 0 to node 1 b>");
+
+        AODVEvent[] expectedEvents = new AODVEvent[6];
+        expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[1], "");
+        expectedEvents[1] = new AODVEvent(2, 1, nodes[0], nodes[1], nodes[0], nodes[1], "");
+        expectedEvents[2] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], "");
+        expectedEvents[3] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1 a>");
+        expectedEvents[4] = new AODVEvent(3, 2, nodes[1], nodes[0], nodes[1], nodes[0], "");
+        expectedEvents[5] = new AODVEvent(4, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1 b>");
+
+        AODVEvent[] res = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
+        for (AODVEvent e : res) {
+            System.out.println(e);
+        }
+
+        assertArrayEquals(
+                expectedEvents,
+                res
+        );
+    }
 }
