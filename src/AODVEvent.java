@@ -38,7 +38,7 @@ public class AODVEvent implements Comparable {
     public int compareTo(Object o) {
         // TODO: needs to be implemented for priority queue to work
         AODVEvent event = (AODVEvent) o;
-        if(this.time < event.time {
+        if(this.time < event.time) {
             return -1;
         } else if(this.time > event.time) {
             return 1;

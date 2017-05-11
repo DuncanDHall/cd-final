@@ -1,5 +1,7 @@
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.PriorityQueue;
+
 /**
  * Created by duncan on 5/5/17.
  *
@@ -8,6 +10,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class AODVHelper {
     public static AODVEvent[] expandEvents(RawEvent[] eventsTablePath) {
         // TODO: implement this
+        PriorityQueue<AODVEvent> table = new PriorityQueue<>();
         throw new NotImplementedException();
     }
 }
