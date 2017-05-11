@@ -22,7 +22,7 @@ public class AODVHelper {
 
             HashSet<Node> visited = new HashSet<>();
             int time = 0;
-
+            int timeDestinationReached = 0;
 
             // Step 1: RREQ flood network
             while (!nextNodes.isEmpty()) {
@@ -31,7 +31,12 @@ public class AODVHelper {
                 for (Node n : ns) {
                     if (!visited.contains(n)) {
                         int hopCount = next.getHopCount(source) + 1;
-                        n.addTableEntry(source, next, hopCount);
+                        if (time < hopCount + e.getTime()) {
+                            time = hopCount + e.getTime();
+                        }
+                        if (n.addTableEntry(source, next, hopCount)) {
+                            timeDestinationReached = time;
+                        }
                         table.offer(new AODVEvent(hopCount, 1, next, n, source, destination, ""));
                         nextNodes.offer(n);
                     }
@@ -40,6 +45,15 @@ public class AODVHelper {
             }
 
             // Step 2: RREP sent destination -> source
+            time = timeDestinationReached;
+            Node current = destination;
+            Node next;
+            while (true) {
+                time += 1;
+                next = current.getNextHop(source);
+                table.offer(new AODVEvent(time, 2, next, current, destination, source, ""));
+                current = next;
+            }
 
             // Step 3: data sent source -> destination
         }

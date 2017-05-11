@@ -29,8 +29,10 @@ public class Node {
         this.routingTable = new HashMap<>();
     }
 
-    public void addTableEntry(Node destination, Node nextHop, int hopCount) {
+    public boolean addTableEntry(Node destination, Node nextHop, int hopCount) {
+        // boolean returns true if destination has been reached
     	this.routingTable.put(destination, new TableEntry(nextHop, hopCount));
+    	return this.equals(destination);
     }
 
     //look up in routing table
