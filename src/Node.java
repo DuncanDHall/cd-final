@@ -45,6 +45,7 @@ public class Node {
 
     //look up in routing table
     public Node getNextHop(Node destination) {
+        if (!routingTable.containsKey(destination)) return null;
     	return routingTable.get(destination).nextHop;
     }
 

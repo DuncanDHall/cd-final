@@ -23,7 +23,6 @@ public class NonlinearNetworkTests {
         for (int i = 1; i < n; i++) {
             current = nodes[i] = new Node(i);
             network.addVertex(current);
-            current = new Node(i);
             network.addEdge(new Link(1, i), current, previous);
             previous = current;
         }
@@ -69,9 +68,9 @@ public class NonlinearNetworkTests {
         AODVEvent[] expectedEvents = new AODVEvent[10];
         expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[2], "");
         expectedEvents[1] = new AODVEvent(1, 1, nodes[0], nodes[3], nodes[0], nodes[2], "");
-        expectedEvents[2] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[2], "");
-        expectedEvents[3] = new AODVEvent(2, 1, nodes[3], nodes[0], nodes[0], nodes[2], "");
-        expectedEvents[4] = new AODVEvent(2, 1, nodes[1], nodes[0], nodes[0], nodes[2], "");
+        expectedEvents[2] = new AODVEvent(2, 1, nodes[1], nodes[0], nodes[0], nodes[2], "");
+        expectedEvents[3] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[2], "");
+        expectedEvents[4] = new AODVEvent(2, 1, nodes[3], nodes[0], nodes[0], nodes[2], "");
         expectedEvents[5] = new AODVEvent(2, 1, nodes[3], nodes[2], nodes[0], nodes[2], "");
         expectedEvents[6] = new AODVEvent(3, 2, nodes[2], nodes[1], nodes[2], nodes[0], "");
         expectedEvents[7] = new AODVEvent(4, 2, nodes[1], nodes[0], nodes[2], nodes[0], "");

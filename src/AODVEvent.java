@@ -58,21 +58,31 @@ public class AODVEvent implements Comparable {
 
     @Override
     public int compareTo(Object o) {
+
         // TODO: needs to be implemented better
         AODVEvent event = (AODVEvent) o;
-        if(this.time < event.time) {
-            return -1;
-        } else if(this.time > event.time) {
-            return 1;
-        } else {
-            if(this.msgType < event.msgType) {
-                return -1;
-            } else if(this.msgType > event.msgType) {
-                return 1;
-            } else {
-                return 0;
-            }
+
+        int[] v1 = new int[6];
+        v1[0] = this.time;
+        v1[1] = this.msgType;
+        v1[2] = this.from.id;
+        v1[3] = this.to.id;
+        v1[4] = this.source.id;
+        v1[5] = this.destination.id;
+
+        int[] v2 = new int[6];
+        v2[0] = event.time;
+        v2[1] = event.msgType;
+        v2[2] = event.from.id;
+        v2[3] = event.to.id;
+        v2[4] = event.source.id;
+        v2[5] = event.destination.id;
+
+        for (int i = 0; i < v1.length; i++) {
+            if (v1[i] > v2[i]) return 1;
+            if (v1[i] < v2[i]) return -1;
         }
+        return 0;
     }
 
     public int getTime() {
