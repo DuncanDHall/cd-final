@@ -64,26 +64,28 @@ public class Global {
         for(int i = 1; i < n; i++) {
             current = nodes[i] = new Node(i);
             int r = (int)(Math.random()*(i-1) + 0);
-            Node n = nodes[r];
+            Node node = nodes[r];
             network.addVertex(current);
-            network.addEdge(new Link(1, i), current, n);
+            network.addEdge(new Link(1, i), current, node);
         }
         
         //then randomly create the remaining links
         if(s > n) {
             int numLinks = s-n;
             for(int i = 0; i < numLinks; i++) {
-                int i1 = (int)(Math.random()*n+0);
-                int i2 = (int)(Math.random()*n+0);
-                Node n1 = node[i1];
-                Node n2 = node[i2];
-                if((index1 == index2) || (network.getNeighbors(n1).contains(n2))) {
+                int i1 = (int)(Math.random()*n);
+                int i2 = (int)(Math.random()*n);
+                Node n1 = nodes[i1];
+                Node n2 = nodes[i2];
+                if((i1 == i2) || (network.getNeighbors(n1).contains(n2))) {
                     i--;
                 } else {
                     network.addEdge(new Link(1, n+i), n1, n2);
                 }
             }
         }
+
+        return network;
     }
 
 
