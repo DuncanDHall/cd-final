@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by duncan on 5/5/17.
@@ -28,14 +29,33 @@ public class Node {
         }
     }
 
+
+
+
 	HashMap<Node, TableEntry> routingTable;
     int id;
+    int floodID;
+    HashSet<String> knownFloods;
+    HashMap<String, String> unsentMessages;
+
 
     public Node(int id) {
         this.id = id;
         this.routingTable = new HashMap<>();
+        floodID = 0;
+        knownFloods = new HashSet<>();
+        unsentMessages = new HashMap<>();
 
         addTableEntry(this, this, 0);
+    }
+
+    public String genFloodID() {
+        floodID++;
+        return id + "-" + floodID;
+    }
+
+    public boolean knowsFlood(String floodID) {
+        return !knownFloods.add(floodID);
     }
 
     public void addTableEntry(Node destination, Node nextHop, int hopCount) {
@@ -52,6 +72,15 @@ public class Node {
     public int getHopCount(Node destination) {
         return routingTable.get(destination).hopCount;
     }
+
+    public String getMessageForFloodID(String floodID) {
+        return unsentMessages.get(floodID);
+    }
+
+
+
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -15,9 +15,11 @@ public class AODVEvent implements Comparable {
     private Node to;
     private Node source;
     private Node destination;
+    private String floodID;
     private String message;
+    private int hopCount;
 
-    public AODVEvent(int time, int msgType, Node from, Node to, Node source, Node destination, String message) {
+    public AODVEvent(int time, int msgType, Node from, Node to, Node source, Node destination, String floodID, String message, int hopCount) {
         if (msgType > 2) {
             throw new IndexOutOfBoundsException("Valid AODVEvents have a msgtype of 0 (data), 1 (rreq), or 2 (rrep)");
         }
@@ -27,12 +29,27 @@ public class AODVEvent implements Comparable {
         this.to = to;
         this.source = source;
         this.destination = destination;
+        this.floodID = floodID;
         this.message = message;
+        this.hopCount = hopCount;
     }
 
     public boolean isData() { return msgType == 0; }
     public boolean isRREQ() { return msgType == 1; }
     public boolean isRREP() { return msgType == 2; }
+
+
+    public AODVEvent(AODVEvent e, Node from, Node to) {
+        this.time = e.time + 1;
+        this.msgType = e.msgType;
+        this.from = from;
+        this.to = to;
+        this.source = e.source;
+        this.destination = e.destination;
+        this.floodID = e.floodID;
+        this.message = e.message;
+        this.hopCount = e.hopCount + 1;
+    }
 
     @Override
     public String toString() {
@@ -107,5 +124,13 @@ public class AODVEvent implements Comparable {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getFloodID() {
+        return floodID;
+    }
+
+    public int getHopCount() {
+        return hopCount;
     }
 }
