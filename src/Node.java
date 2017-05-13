@@ -49,9 +49,11 @@ public class Node {
         addTableEntry(this, this, 0);
     }
 
-    public String genFloodID() {
+    public String genFloodID(String message) {
         floodID++;
-        return id + "-" + floodID;
+        String strID = id + "-" + floodID;
+        unsentMessages.put(strID, message);
+        return strID;
     }
 
     public boolean knowsFlood(String floodID) {

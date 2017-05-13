@@ -15,18 +15,23 @@ public class AODVHelper {
         ArrayList<AODVEvent> currentEvents = new ArrayList<>();
         ArrayList<AODVEvent> nextEvents;
 
-
-        for (int t = 0; t > eventsTable[eventsTable.length - 1].getTime() && currentEvents.isEmpty(); t++) {
+        for (int t = 0; t <= eventsTable[eventsTable.length - 1].getTime() || !currentEvents.isEmpty(); t++) {
+            System.out.println(t);
             nextEvents = new ArrayList<>();
 
             // calculate next events based on current
             for (AODVEvent event : currentEvents) {
+
+                System.out.println("event processing");
+
+                table.add(event);
 
                 Node previousNode = event.getFrom();
                 Node currentNode = event.getTo();
 
                 // RREQ
                 if (event.isRREQ()) {
+                    System.out.println("RREQ");
                     if (!currentNode.knowsFlood(event.getFloodID())) {
                         // propagating RREQ
                         currentNode.addTableEntry(event.getSource(), previousNode, event.getHopCount());
@@ -56,7 +61,8 @@ public class AODVHelper {
                         nextEvents.add(new AODVEvent(
                                 t, 0,
                                 currentNode, currentNode.getNextHop(event.getSource()),
-                                currentNode, event.getDestination(), event.getFloodID(),
+                                currentNode, event.getSource(),
+                                event.getFloodID(),
                                 currentNode.getMessageForFloodID(event.getFloodID()), 1
                         ));
                     }
@@ -70,21 +76,26 @@ public class AODVHelper {
                     currentNode.addTableEntry(event.getSource(), previousNode, event.getHopCount());
                     if (currentNode.equals(event.getDestination())) {
                         System.out.println(event.getSource() + "'s message reached " + currentNode);
+                    } else {
+                        System.out.println(event.getSource() + " || " + event.getDestination());
+                        nextEvents.add(new AODVEvent(event, currentNode, currentNode.getNextHop(event.getDestination())));
                     }
                 }
             }
 
 
             // check for new raw events to be included in simulation
-            if (t == rawEvents.peek().getTime()) {
+            if (!rawEvents.isEmpty() && t == rawEvents.peek().getTime()) {
+                System.out.println("new raw added");
                 RawEvent e = rawEvents.poll();
                 Node source = nodeLookup.get(e.getNodeFrom());
                 Node destination = nodeLookup.get(e.getNodeTo());
 
-                String floodID = source.genFloodID();
+                String floodID = source.genFloodID(e.getMsg());
 
                 // spawn a new RREQ for each neighbor of the source
                 for (Node neighbor : network.getNeighbors(source)) {
+                    System.out.println("neighbor added");
                     nextEvents.add(new AODVEvent(t, 1, source, neighbor, source, destination, floodID, "", 1));
                 }
             }
@@ -160,6 +171,8 @@ public class AODVHelper {
 //                time += 1;
 //            }
 //        }
+
+        System.out.println(table);
 
         AODVEvent[] res = new AODVEvent[table.size()];
         for (int i = 0; i < res.length; i++) {
