@@ -1,6 +1,5 @@
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -10,15 +9,12 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Created by duncan on 5/6/17.
  */
-public class EventExpansionTests {
+public class LinearNetworkTests {
 
     private Global g;
     private Graph<Node, Link> network;
     private Node[] nodes;
 
-    @Before
-    public void setup() {
-    }
 
     private void makeLinearNetwork(int numNodes) {
         network = new SparseGraph<>();
@@ -41,7 +37,10 @@ public class EventExpansionTests {
     }
 
     @Test
-    public void testExpand1() {
+    public void testLinearNetwork1() {
+        /*
+         *      O-1     message from 0 -> 1
+         */
         makeLinearNetwork(2);
 
         RawEvent[] rawEvents = new RawEvent[1];
@@ -62,7 +61,10 @@ public class EventExpansionTests {
     }
 
     @Test
-    public void testExpand2() {
+    public void testLinearNetwork2() {
+        /*
+         *      O-1-2       message 0 -> 2
+         */
         makeLinearNetwork(3);
 
         RawEvent[] rawEvents = new RawEvent[1];
@@ -88,7 +90,10 @@ public class EventExpansionTests {
     }
 
     @Test
-    public void testExpand3() {
+    public void testLinearNetwork3() {
+        /*
+         *      O-1-2       message 0 -> 1
+         */
         // NOTE this demonstrates that RREQ propagation continues through destination node
 
         makeLinearNetwork(3);
@@ -114,7 +119,10 @@ public class EventExpansionTests {
     }
 
     @Test
-    public void testExpand4() {
+    public void testLinearNetwork4() {
+        /*
+         *      O-1       message 0 -> 1 (twice)
+         */
         makeLinearNetwork(2);
 
         RawEvent[] rawEvents = new RawEvent[2];
@@ -139,4 +147,5 @@ public class EventExpansionTests {
                 res
         );
     }
+
 }

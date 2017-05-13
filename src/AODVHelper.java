@@ -18,6 +18,7 @@ public class AODVHelper {
 
             // Step 1: RREQ flood network
             // note that this propagates RREQ through the destination
+            // TODO: RREQ messages should be sent to nodes that already received them, just not forwarded by those nodes
             ArrayList<Node> nextNodes = new ArrayList<>();
             ArrayList<Node> currentNodes = new ArrayList<>();
             currentNodes.add(source);
