@@ -52,11 +52,47 @@ public class Global {
         // TODO-stretch: generate a random thin table of 'send data' events instead
     }
 
+    //generate sparse graph of n nodes, s edges
+    public Graph<Node, Link> generateSparseGraph(int n, int s) {
+        //generate ring
+        Graph<Node, Link> network = new SparseGraph<>();
+        Node[] nodes = new Node[n];
+
+        Node first = new Node(0);
+        network.addVertex(first);
+        Node current = null;
+        for(int i = 1; i < n; i++) {
+            current = nodes[i] = new Node(i);
+            int r = (int)(Math.random()*(i-1) + 0);
+            Node n = nodes[r];
+            network.addVertex(current);
+            network.addEdge(new Link(1, i), current, n);
+        }
+        
+        //then randomly create the remaining links
+        if(s > n) {
+            int numLinks = s-n;
+            for(int i = 0; i < numLinks; i++) {
+                int i1 = (int)(Math.random()*n+0);
+                int i2 = (int)(Math.random()*n+0);
+                Node n1 = node[i1];
+                Node n2 = node[i2];
+                if((index1 == index2) || (network.getNeighbors(n1).contains(n2))) {
+                    i--;
+                } else {
+                    network.addEdge(new Link(1, n+i), n1, n2);
+                }
+            }
+        }
+    }
+
+
     public static void main(String[] args) {
         Global g = new Global(5, false);
         RawEvent[] dataTransferEvents = g.generateDataTransferEvents();
 
         AODVEvent[] fullEvents = AODVHelper.expandEvents(dataTransferEvents, g.network, g.nodeLookup);
+
 
         // TODO: save fullEvents to csv
 
