@@ -67,9 +67,4 @@ public class Node {
         return String.format("Node %d", id);
     }
 
-
-    // TODO: temp
-    public void printTable() {
-        System.out.println(routingTable);
-    }
 }

@@ -58,7 +58,7 @@ public class AODVEvent implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        // TODO: needs to be implemented for priority queue to work
+        // TODO: needs to be implemented better
         AODVEvent event = (AODVEvent) o;
         if(this.time < event.time) {
             return -1;

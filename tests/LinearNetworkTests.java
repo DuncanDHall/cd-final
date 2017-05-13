@@ -70,13 +70,14 @@ public class LinearNetworkTests {
         RawEvent[] rawEvents = new RawEvent[1];
         rawEvents[0] = new RawEvent(1, 0, 2, "<node 0 to node 2>");
 
-        AODVEvent[] expectedEvents = new AODVEvent[6];
+        AODVEvent[] expectedEvents = new AODVEvent[7];
         expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[2], ""); // RREQ 0 -> 1
-        expectedEvents[1] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[2], "");
-        expectedEvents[2] = new AODVEvent(3, 2, nodes[2], nodes[1], nodes[2], nodes[0], ""); // RREP 1 -> 0
-        expectedEvents[3] = new AODVEvent(4, 2, nodes[1], nodes[0], nodes[2], nodes[0], ""); // RREP 1 -> 0
-        expectedEvents[4] = new AODVEvent(5, 0, nodes[0], nodes[1], nodes[0], nodes[2], "<node 0 to node 2>"); // data 0 -> 1
-        expectedEvents[5] = new AODVEvent(6, 0, nodes[1], nodes[2], nodes[0], nodes[2], "<node 0 to node 2>"); // data 0 -> 1
+        expectedEvents[1] = new AODVEvent(2, 1, nodes[1], nodes[0], nodes[0], nodes[2], "");
+        expectedEvents[2] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[2], "");
+        expectedEvents[3] = new AODVEvent(3, 2, nodes[2], nodes[1], nodes[2], nodes[0], ""); // RREP 1 -> 0
+        expectedEvents[4] = new AODVEvent(4, 2, nodes[1], nodes[0], nodes[2], nodes[0], ""); // RREP 1 -> 0
+        expectedEvents[5] = new AODVEvent(5, 0, nodes[0], nodes[1], nodes[0], nodes[2], "<node 0 to node 2>"); // data 0 -> 1
+        expectedEvents[6] = new AODVEvent(6, 0, nodes[1], nodes[2], nodes[0], nodes[2], "<node 0 to node 2>"); // data 0 -> 1
 
         AODVEvent[] res = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
         for (AODVEvent e : res) {
@@ -101,11 +102,10 @@ public class LinearNetworkTests {
         RawEvent[] rawEvents = new RawEvent[1];
         rawEvents[0] = new RawEvent(1, 0, 1, "<node 0 to node 1>");
 
-        AODVEvent[] expectedEvents = new AODVEvent[4];
+        AODVEvent[] expectedEvents = new AODVEvent[3];
         expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[1], "");
-        expectedEvents[1] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[1], "");
-        expectedEvents[2] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], "");
-        expectedEvents[3] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1>");
+        expectedEvents[1] = new AODVEvent(2, 2, nodes[1], nodes[0], nodes[1], nodes[0], "");
+        expectedEvents[2] = new AODVEvent(3, 0, nodes[0], nodes[1], nodes[0], nodes[1], "<node 0 to node 1>");
 
         AODVEvent[] res = AODVHelper.expandEvents(rawEvents, g.network, g.nodeLookup);
         for (AODVEvent e : res) {

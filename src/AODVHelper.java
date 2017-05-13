@@ -1,6 +1,9 @@
 import edu.uci.ics.jung.graph.Graph;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 
 /**
  * Created by duncan on 5/5/17.
@@ -24,20 +27,37 @@ public class AODVHelper {
             currentNodes.add(source);
 
             HashSet<Node> visited = new HashSet<>();
+            visited.add(source);
 
-            int timeDestinationReached = 0;
+            Integer timeDestinationReached = null;
 
             for (int hopCount = 1; !currentNodes.isEmpty(); hopCount++) {
                 for (Node node : currentNodes) {
-                    visited.add(node);
                     for (Node neighbor : network.getNeighbors(node)) {
-                        if (!visited.contains(neighbor)){
-                            if (neighbor.equals(destination)) timeDestinationReached = hopCount + e.getTime();
+                        table.add(new AODVEvent(hopCount + e.getTime() - 1, 1, node, neighbor, source, destination, ""));
+                        if (!visited.contains(neighbor)) {
+                            visited.add(neighbor);
                             neighbor.addTableEntry(source, node, hopCount);
-                            table.add(new AODVEvent(hopCount + e.getTime() - 1, 1, node, neighbor, source, destination, ""));
-                            nextNodes.add(neighbor);
+                            if (neighbor.equals(destination)) {
+                                timeDestinationReached = hopCount + e.getTime();
+                            } else {
+                                nextNodes.add(neighbor);
+                            }
                         }
                     }
+
+                    // older version
+//                    if (!(visited.contains(node) || node.equals(destination))) {
+//                        visited.add(node);
+//                        for (Node neighbor : network.getNeighbors(node)) {
+//                            if (neighbor.equals(destination)) {
+//                                timeDestinationReached = hopCount + e.getTime();
+//                            }
+//                            neighbor.addTableEntry(source, node, hopCount);
+//                            table.add(new AODVEvent(hopCount + e.getTime() - 1, 1, node, neighbor, source, destination, ""));
+//                            nextNodes.add(neighbor);
+//                        }
+//                    }
                 }
                 currentNodes = nextNodes;
                 nextNodes = new ArrayList<>();
