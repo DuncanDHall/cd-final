@@ -51,6 +51,8 @@ public class NonlinearNetworkTests {
         AODVEvent[] res = AODVHelper.expandEvents(rawEvents, network, g.nodeLookup);
         for (AODVEvent e : res) System.out.println(e);
 
+        CSVHelper.writeCSV(res);
+
         assertArrayEquals(expectedEvents, res);
     }
 

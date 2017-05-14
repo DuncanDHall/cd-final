@@ -26,9 +26,12 @@ public class Global {
     HashMap<Integer, Node> nodeLookup;
 
 
-    public Global(int numNodes, boolean dynamic) {
-        this.network = new SparseGraph<>();
-        // TODO: populate network with nodes according to numNodes
+    public Global(int numNodes, int numEdges, boolean dynamic) {
+        this.network = generateSparseGraph(numNodes, numEdges);
+        nodeLookup = new HashMap<>();
+        for (Node n : network.getVertices()) {
+            nodeLookup.put(n.id, n);
+        }
 
         if (dynamic) {
             throw new NotImplementedException();
@@ -44,17 +47,20 @@ public class Global {
         }
     }
 
-    public RawEvent[] generateDataTransferEvents() {
+    public RawEvent[] generateDataTransferEvents(int n, int e) {
         // generate a deterministic thin table of 'send data' events
-        RawEvent[] events = new RawEvent[2];
-        events[0] = new RawEvent(1, 0, 4, "<node 0 calling node 4>");
-        events[1] = new RawEvent(11, 1, 3, "<node 1 calling node 3>");
-
-        // TODO: test for events closer together, and concurrent events
+        RawEvent[] events = new RawEvent[e];
+        for (int i = 0; i < e; i++) {
+            int source = (int) (Math.random() * n);
+            int destination = source;
+            while (destination == source) {
+                destination = (int) (Math.random() * n);
+            }
+            String msg = "node " + source + " to node " + destination;
+            events[i] = new RawEvent(i * 5, source, destination, msg);
+        }
 
         return events;
-
-        // TODO-stretch: generate a random thin table of 'send data' events instead
     }
 
     //generate sparse graph of n nodes, s edges
@@ -69,15 +75,14 @@ public class Global {
         for(int i = 1; i < n; i++) {
             current = nodes[i] = new Node(i);
             int r = (int)(Math.random()*(i-1) + 0);
-            System.out.println(r);
             Node node = nodes[r];
             network.addVertex(current);
             network.addEdge(new Link(1, i), current, node);
         }
         
         //then randomly create the remaining links
-        if(s > n) {
-            int numLinks = s-n;
+        if(s >= n) {
+            int numLinks = s-n+1;
             for(int i = 0; i < numLinks; i++) {
                 int i1 = (int)(Math.random()*n);
                 int i2 = (int)(Math.random()*n);
@@ -97,12 +102,17 @@ public class Global {
 
     public static void main(String[] args) {
 
-        Global g = new Global(5, false);
+        Global g = new Global(100, 300, false);
 
-        Graph<Node, Link> network = g.generateSparseGraph(7, 7);
+        RawEvent[] raws = g.generateDataTransferEvents(g.network.getVertexCount(), 3);
+        System.out.println("ahaehrjkaejh");
+        AODVEvent[] events = AODVHelper.expandEvents(raws, g.network, g.nodeLookup);
+
+        System.out.println("herer");
+        CSVHelper.writeCSV(events);
 
         // The Layout<V, E> is parameterized by the vertex and edge types
-        Layout<Integer, String> layout = new CircleLayout(network);
+        Layout<Integer, String> layout = new CircleLayout(g.network);
         layout.setSize(new Dimension(300,300)); // sets the initial size of the space
         // The BasicVisualizationServer<V,E> is parameterized by the edge types
         BasicVisualizationServer<Integer,String> vv =
@@ -113,6 +123,8 @@ public class Global {
         frame.getContentPane().add(vv);
         frame.pack();
         frame.setVisible(true);
+
+
 
 
 

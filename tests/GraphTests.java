@@ -1,6 +1,5 @@
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import org.junit.Test;
 
@@ -14,12 +13,10 @@ public class GraphTests {
 
     @Test
     public void testGraphGeneration() {
-        Global g = new Global(5, false);
-
-        Graph<Node, Link> network = g.generateSparseGraph(5, 7);
+        Global g = new Global(5, 7, false);
 
         // The Layout<V, E> is parameterized by the vertex and edge types
-        Layout<Integer, String> layout = new CircleLayout(network);
+        Layout<Integer, String> layout = new CircleLayout(g.network);
         layout.setSize(new Dimension(300,300)); // sets the initial size of the space
         // The BasicVisualizationServer<V,E> is parameterized by the edge types
         BasicVisualizationServer<Integer,String> vv =
