@@ -70,7 +70,7 @@ public class LinearNetworkTests {
         RawEvent[] rawEvents = new RawEvent[1];
         rawEvents[0] = new RawEvent(1, 0, 2, "<node 0 to node 2>");
 
-        AODVEvent[] expectedEvents = new AODVEvent[7];
+        AODVEvent[] expectedEvents = new AODVEvent[6];
         expectedEvents[0] = new AODVEvent(1, 1, nodes[0], nodes[1], nodes[0], nodes[2], "0-1", "", 1); // RREQ 0 -> 1
         expectedEvents[1] = new AODVEvent(2, 1, nodes[1], nodes[2], nodes[0], nodes[2], "0-1", "", 2);
         expectedEvents[2] = new AODVEvent(3, 2, nodes[2], nodes[1], nodes[2], nodes[0], "0-1", "", 1); // RREP 1 -> 0

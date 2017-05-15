@@ -27,11 +27,7 @@ public class Global {
 
 
     public Global(int numNodes, int numEdges, boolean dynamic) {
-        this.network = generateSparseGraph(numNodes, numEdges);
-        nodeLookup = new HashMap<>();
-        for (Node n : network.getVertices()) {
-            nodeLookup.put(n.id, n);
-        }
+        this(generateSparseGraph(numNodes, numEdges));
 
         if (dynamic) {
             throw new NotImplementedException();
@@ -64,7 +60,7 @@ public class Global {
     }
 
     //generate sparse graph of n nodes, s edges
-    public Graph<Node, Link> generateSparseGraph(int n, int s) {
+    public static Graph<Node, Link> generateSparseGraph(int n, int s) {
         //generate ring
         Graph<Node, Link> network = new SparseGraph<>();
         Node[] nodes = new Node[n];
