@@ -1,13 +1,9 @@
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseGraph;
-import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * Created by duncan on 5/5/17.
@@ -43,7 +39,7 @@ public class Global {
         }
     }
 
-    public RawEvent[] generateDataTransferEvents(int n, int e) {
+    public RawEvent[] generateDataTransferEvents(int n, int e, int interval) {
         // generate a deterministic thin table of 'send data' events
         RawEvent[] events = new RawEvent[e];
         for (int i = 0; i < e; i++) {
@@ -53,7 +49,7 @@ public class Global {
                 destination = (int) (Math.random() * n);
             }
             String msg = "node " + source + " to node " + destination;
-            events[i] = new RawEvent(i * 5, source, destination, msg);
+            events[i] = new RawEvent(i * interval, source, destination, msg);
         }
 
         return events;
@@ -98,34 +94,31 @@ public class Global {
 
     public static void main(String[] args) {
 
-        Global g = new Global(100, 300, false);
+        // User input of parameters
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Please specify the number of nodes (int): ");
+        int numNodes = reader.nextInt();
+        System.out.println("Please specify the average degree of the nodes (double):\n(all nodes will be at least degree 1, and the network will always be connected)");
+        int numEdges = (int) (Double.parseDouble(reader.next()) * numNodes / 2);
+        System.out.println("Please specify the number of data transfers to be generated (int):");
+        int dataTransfers = reader.nextInt();
+        System.out.println("Please specify the number of time steps between messages (int):");
+        int timeSteps = reader.nextInt();
 
-        RawEvent[] raws = g.generateDataTransferEvents(g.network.getVertexCount(), 3);
-        System.out.println("ahaehrjkaejh");
+
+        // generate a global state with static network
+        Global g = new Global(numNodes, numEdges, false);
+
+        // generate data transfers and associated AODV events
+        RawEvent[] raws = g.generateDataTransferEvents(numNodes, dataTransfers, timeSteps);
         AODVEvent[] events = AODVHelper.expandEvents(raws, g.network, g.nodeLookup);
 
-        System.out.println("herer");
+        // log the generated events for user inspection
         CSVHelper.writeCSV(events);
 
-        // The Layout<V, E> is parameterized by the vertex and edge types
-        Layout<Integer, String> layout = new CircleLayout(g.network);
-        layout.setSize(new Dimension(300,300)); // sets the initial size of the space
-        // The BasicVisualizationServer<V,E> is parameterized by the edge types
-        BasicVisualizationServer<Integer,String> vv =
-                new BasicVisualizationServer<Integer,String>(layout);
-        vv.setPreferredSize(new Dimension(350,350)); //Sets the viewing area size
-        JFrame frame = new JFrame("Simple Graph View");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(vv);
-        frame.pack();
-        frame.setVisible(true);
+        // allows us to view the network layout
+        Visualizer.visualizeNetwork(g.network);
 
-
-
-
-
-        // TODO: save fullEvents to csv
-
-        // TODO-stretch: Visualizer.visualize(fullEvents);
+        // TODO-stretch: Visualizer.visualize(fullEvents);  // this will be the animated representation
     }
 }

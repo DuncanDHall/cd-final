@@ -16,14 +16,10 @@ public class AODVHelper {
         ArrayList<AODVEvent> nextEvents;
 
         for (int t = 0; t <= eventsTable[eventsTable.length - 1].getTime() || !currentEvents.isEmpty(); t++) {
-            System.out.println(t);
             nextEvents = new ArrayList<>();
 
             // calculate next events based on current
             for (AODVEvent event : currentEvents) {
-
-                System.out.println("event processing");
-
                 table.add(event);
 
                 Node previousNode = event.getFrom();
@@ -31,7 +27,6 @@ public class AODVHelper {
 
                 // RREQ
                 if (event.isRREQ()) {
-                    System.out.println("RREQ");
                     if (!currentNode.knowsFlood(event.getFloodID())) {
                         // propagating RREQ
                         currentNode.addTableEntry(event.getSource(), previousNode, event.getHopCount());
@@ -77,7 +72,6 @@ public class AODVHelper {
                     if (currentNode.equals(event.getDestination())) {
                         System.out.println(event.getSource() + "'s message reached " + currentNode);
                     } else {
-                        System.out.println(event.getSource() + " || " + event.getDestination());
                         nextEvents.add(new AODVEvent(event, currentNode, currentNode.getNextHop(event.getDestination())));
                     }
                 }
@@ -86,7 +80,6 @@ public class AODVHelper {
 
             // check for new raw events to be included in simulation
             if (!rawEvents.isEmpty() && t == rawEvents.peek().getTime()) {
-                System.out.println("new raw added");
                 RawEvent e = rawEvents.poll();
                 Node source = nodeLookup.get(e.getNodeFrom());
                 Node destination = nodeLookup.get(e.getNodeTo());
@@ -95,7 +88,6 @@ public class AODVHelper {
 
                 // spawn a new RREQ for each neighbor of the source
                 for (Node neighbor : network.getNeighbors(source)) {
-                    System.out.println("neighbor added");
                     nextEvents.add(new AODVEvent(t, 1, source, neighbor, source, destination, floodID, "", 1));
                 }
             }
