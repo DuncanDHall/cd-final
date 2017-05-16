@@ -3,7 +3,6 @@ This technical detail was last updated May 16th, 2017
 
 *This document will be transferred to inline comments*
 
-
 ## AODVEvent
 
 This class represents any of the AODVEvents that occur in our system. This currently includes route request messages (RREQ), route reply messages (RREP), and data transfer messages. Each AODV event takes place across one edge in the network at a specific time.
@@ -78,7 +77,7 @@ This class is the starting point for the program when it runs, calling on all ot
 | *constructor*     | Global                      | Graph<Node, Link> network | A secondary constructor for a Global state object which allows external construction of the network. Useful for testing |
 | RawEvent[]        | generateDataTransfersEvents | int n, int e, int interval | Generates an array of e RawEvents between random selections from n nodes with a time interval |
 | Graph<Node, Link> | generateSparseGraph         | int n, int s | Used by the first constructor to generate a random connected graph with n nodes and s edges. Note: the graphs generated don't accurately represent an ad hoc network because there is no location tied to the nodes. Edges are added at random to the graph after all nodes have been connected |
-| void              | main                        | String[] args | This is the main method of the program. Invoke this with `java Global` from the command line, and then follow the prompts. First the program generates a random connected graph, and prompts the user for the number of nodes, then the average degree of each node (the number of edges generated is floor(degree * nodes / 2)). Make sure that the input degree is between n/(n-1) and n(n-1)/2 because there are no catches implemented for input degrees that will yield too many or too few edges for a connected graph. The next two prompts have to do with the data messages to be sent. The program will ask for the number of desired messages, and the desired interval between messages (shorter intervals/larger networks will result in messages from different pathfinding sessions taking place concurrently, but messages from different sessions do not interfere with one another). A Global starting state is then created from those parameters, raw events generated, and those events are expanded into a full AODVEvents array, and logged to a csv file. A basic implementation of the Visualizer class allows the viewing of the topology of the network generated, though nodes are currently unlabeled, and the image is not animated with the messages as we aim for eventually. |
+| void              | main                        | String[] args | This is the main method of the program. Invoke this with `java Global` from the command line, and then follow the prompts. First the program generates a random connected graph, and prompts the user for the number of nodes, then the average degree of each node (the number of edges generated is floor(degree * nodes / 2)). Make sure that the input degree is between 2(n-1)/n and n(n-1)/2 because there are no catches implemented for input degrees that will yield too many or too few edges for a connected graph. The next two prompts have to do with the data messages to be sent. The program will ask for the number of desired messages, and the desired interval between messages (shorter intervals/larger networks will result in messages from different pathfinding sessions taking place concurrently, but messages from different sessions do not interfere with one another). A Global starting state is then created from those parameters, raw events generated, and those events are expanded into a full AODVEvents array, and logged to a csv file. A basic implementation of the Visualizer class allows the viewing of the topology of the network generated, though nodes are currently unlabeled, and the image is not animated with the messages as we aim for eventually. |
 
 
 
@@ -158,5 +157,41 @@ A class to which all visualization functionality is delegated.
 | void              | visualizeNetwork     | Graph<Node, Link> network | Creates a static image of the input network and displays it to the user. This should be rewritten to include node labels |
 | void              | visualize            | AODVEvents[] fullEvents | Not implemented yet, but this is the method that will provide the full animated version of the AODVEents. It will also need to be modified to take in the network topology |
 
+
+
+
+## Tests
+
+We included a couple of tests of the AODV algorithm in this repository to exemplify and verify the program. Below are summaries of each test file.
+
+
+### GraphTests
+
+This test group only has one test and is not automatic. It is solely a demonstration of the graph visualization technique the visualizer uses currently.
+
+
+### LinearNetworkTests
+
+This test group includes tests for linear networks only.
+
+
+#### makLinearNetwork(int numNodes)
+
+This helper function creates a linear network with the specified number of nodes, and nothing more!
+
+
+#### testLinearNetwork1 (Test)
+
+This first test is for only two nodes connected by a single edge, with one RawEvent expanded into 3 AODVEvents.
+
+
+#### testLinearNetwork2 (Test)
+
+This test is identical to the first, but with an extra node in between, with one RawEvent expanded into 6 AODVEvents.
+
+
+#### testLinearNetwork3 (Test)
+
+This test used the same topology as the second, but the RawEvent is sent from the first node to the second, with the third never recieving any messages (one RawEvent, 3 AODVEvents).
 
 
